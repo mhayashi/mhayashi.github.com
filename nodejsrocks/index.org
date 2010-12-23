@@ -532,30 +532,30 @@ curl http://npmjs.org/install.sh | sh
 * モジュール - Web Framework
 
   - Web Framework
-    - Express
-    - Socket.IO
+    - [[http://expressjs.com][Express]]
+    - [[http://socket.io][Socket.IO]]
 
 
 * モジュール - DB
 
   - DB
-    - MySQL: node-mysql
-    - MongoDB: mongoose
-    - CouchDB: cradle
-    - Redis: node_redis
+    - MySQL: [[https://github.com/felixge/node-mysql][node-mysql]]
+    - MongoDB: [[https://github.com/LearnBoost/mongoose][mongoose]]
+    - CouchDB: [[https://github.com/cloudhead/cradle][cradle]]
+    - Redis: [[https://github.com/mranney/node_redis][node_redis]]
 
 
 * モジュール - Test
 
   - Test
-    - Expresso + should
-    - Vows
+    - [[https://github.com/visionmedia/expresso][Expresso]] + [[https://github.com/visionmedia/should.js][should]]
+    - [[http://vowsjs.org][Vows]]
 
 
 * モジュール - Debug
 
   - Debug
-    - Node Inspector
+    - [[https://github.com/dannycoates/node-inspector][Node Inspector]]
       - Chrome の Web Inspector を使ってサーバサイドのデバッグができる
 
 
@@ -572,7 +572,7 @@ curl http://npmjs.org/install.sh | sh
   - 公式ドキュメント
     - 全部翻訳済みです (ほとんど by @koichik)
   - チュートリアル
-    - nodejs.jp にリンクがあります by @meso, @yssk22
+    - [[http://nodejs.jp][nodejs.jp]] にリンクがあります by @meso, @yssk22
 
 
 * 

@@ -456,9 +456,7 @@ Node.jsの歩き方
 
   - Twitter
     - [[http://twitter.com/masahiroh/nodejs][list]]
-      - どんな人がいるか
-    - #nodejs\_jp
-      - 日本語つぶやき用
+    - [[http://twitter.com/search?q=%23nodejs_jp][#nodejs\_jp]]
 
 
 #+BEGIN_CENTER
@@ -502,7 +500,7 @@ curl http://npmjs.org/install.sh | sh
     - 0.3.x <- 2桁めが奇数 = 開発版
       - 新機能がばんばん追加される
       - メーリングリストを見ていれば、何が進行中かわかる
-      - いまは https 実装中
+        - いまは https 実装中
     - 0.2.x <- 2桁めが偶数 = 安定版
 
 
@@ -542,7 +540,7 @@ curl http://npmjs.org/install.sh | sh
     - MySQL: [[https://github.com/felixge/node-mysql][node-mysql]]
     - MongoDB: [[https://github.com/LearnBoost/mongoose][mongoose]]
     - CouchDB: [[https://github.com/cloudhead/cradle][cradle]]
-    - Redis: [[https://github.com/mranney/node_redis][node_redis]]
+    - Redis: [[https://github.com/mranney/node_redis][node\_redis]]
 
 
 * モジュール - Test

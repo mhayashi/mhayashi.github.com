@@ -313,8 +313,8 @@ section.middle {
 }
 
 pre {
+  font: 'Inconsolata';
   text-align: left;
-  font-family: 'Droid Sans Mono', Courier;
   font-size: 30px;
   padding: 10px 20px;
   background: rgba(255, 0, 0, 0.05);

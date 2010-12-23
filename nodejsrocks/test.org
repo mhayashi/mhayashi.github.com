@@ -1,0 +1,103 @@
+#+TITLE: TEST
+
+* 
+
+# こう書けばクラスを追加できるはずなんだけど。。
+:PROPERTIES:
+:HTML_CONTAINER_CLASS: middle
+:END:
+
+#+STYLE: <link rel="stylesheet" type="text/css" href="middle.css" />
+
+#+BEGIN_CENTER
+１行のみ
+#+END_CENTER
+
+# タイトルは空にしても大丈夫
+
+* 
+
+#+BEGIN_CENTER
+２行に渡るやつも真ん中にかけろ
+#+END_CENTER
+
+
+* List
+
+- *Emphasize*
+  - aaa
+- bbb
+- ccc
+
+
+
+* QUOTE Quote
+
+Everything should be made as simple as possible,
+but not any simpler -- Albert Einstein
+
+全部引用になる
+
+
+* 段落を引用にするのは無理
+
+#+BEGIN_QUOTE
+Everything should be made as simple as possible,
+but not any simpler -- Albert Einstein
+#+END_QUOTE
+
+
+* 例
+
+こっち使うのがよさげ
+   : Some example from a text file.
+
+
+
+
+* テーブル
+
+| Name  | Phone | Age |
+|-------+-------+-----|
+| Peter |  1234 |  17 |
+| Anna  |  4321 |  25 |
+
+
+
+
+* code
+#+BEGIN_SRC javascript
+var http = require('http');
+
+http.createServer(function (request, response) {
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.end('Hello World\n');
+}).listen(8124);
+
+console.log('Server running at http://127.0.0.1:8124/');
+#+END_SRC
+
+
+* オプション
+
+HTML タグのエスケープ
+@<input type="text" />
+
+
+
+* 脚注 (未対応)
+
+The Org homepage[1] now looks a lot better than it used to.
+
+...
+
+[1] The link is: http://orgmode.org
+
+
+* COMMENT コメント
+
+全部コメント扱いなので、出力されない
+
+
+
+

@@ -1,0 +1,628 @@
+#+TITLE: Node.js Rocks!
+
+
+* Me
+  - Masahiro Hayashi
+  - [[http://twitter.com/masahiroh][@masahiroh]]
+  - Node.js 日本ユーザグループ ([[http://nodejs.jp/][nodejs.jp]])
+  - [[http://journal.paul.querna.org/wp-content/uploads/2010/06/nodejs.png]]
+
+* Node.js 本をみんなで書いています
+
+  - 執筆陣
+    - [[http://twitter.com/atsuya][http://a1.twimg.com/profile_images/1154667345/twitter-profile_bigger.png]]
+      [[http://twitter.com/bad_at_math][http://a1.twimg.com/profile_images/1111214185/Untitled1_bigger.png]]
+      [[http://twitter.com/Jxck_][http://a2.twimg.com/profile_images/490975026/Jack_bigger.GIF]]
+      [[http://twitter.com/KOBA789][http://a3.twimg.com/profile_images/1147291143/icon6_bigger.png]]
+      [[http://twitter.com/koichik][http://a0.twimg.com/profile_images/1096760476/profile_bigger.gif]]
+      [[http://twitter.com/masahiroh][http://a1.twimg.com/profile_images/1193969413/avator06_bigger.jpg]]
+      [[http://twitter.com/meso][http://a0.twimg.com/profile_images/552568928/meso_bigger.jpg]]
+      [[http://twitter.com/nsyee][http://a3.twimg.com/profile_images/624391467/me-profile-small_bigger.png]]
+      [[http://twitter.com/yssk22][http://a2.twimg.com/profile_images/1166169462/elly_bigger.png]]
+
+  - 監修
+    - [[http://twitter.com/jedschmidt][http://a3.twimg.com/profile_images/1164735503/Jed_Schmidt_bigger.jpeg]]
+      [[http://twitter.com/t_wada][http://a0.twimg.com/profile_images/421959794/TQ_LOGO_bigger.png]]
+
+
+
+* 今日の内容
+
+  - Node.jsの楽しさを伝えるためにきました。
+  - デモ多めです。
+  - アーキテクチャの話はあまり出てきません:D
+
+
+
+
+* 
+
+#+BEGIN_CENTER
+Node.js Rocks!
+#+END_CENTER
+
+* 
+
+#+BEGIN_CENTER
+=
+#+END_CENTER
+
+* 
+
+#+BEGIN_CENTER
+Node ⊿
+#+END_CENTER
+
+
+* Github のトップページにも載りました！
+    
+    [[./github.png]]
+
+
+* 
+
+#+BEGIN_CENTER
+Node ⊿ その１
+#+END_CENTER
+
+* 
+
+#+BEGIN_CENTER
+Websocket
+#+END_CENTER
+
+
+* 
+
+#+BEGIN_CENTER
+WebのUXが@<br>変わる！
+#+END_CENTER
+
+
+* Node.js Knockout (8/28, 29)
+  
+  - [[http://nodeknockout.com/][http://nodeknockout.com/images/nodeko.png]]
+  - 48時間耐久ハッカソン&コンペ
+  - リアルタイムのWebアプリが目白押し
+  - が、ホスト先のJoyentがサーバをとめたので、動いているアプリはほとんどありませんorz
+
+
+* とはいえ
+
+  - Node.jsの魅力としてぜひ知ってもらいたいので、あちこち探してあつめてきたリアルタイムWebアプリを紹介します
+
+
+* Hummingbird
+
+  - Websocket + ログ
+  - リアルタイムのアクセス解析ログの表示ツール
+  - [[http://projects.nuttnet.net/hummingbird/][Demo]]
+
+       
+* Serrano
+
+  - Websocket + マウス操作
+  - DOM操作をモニタリング
+  - DOM操作を別の相手に飛ばすことができる
+  - [[http://www.screentoaster.com/watch/stUE5XQEVMRFtXQ1xVXFlYVlZX/serrano_session_sharing_vote_4_us_http_is_gd_e][Screen cast]]
+
+
+* Swarmation
+
+  - Websocket + Game
+  - プレーヤ同士で協力して図形をつくる
+  - [[http://swarmation.com/][Demo]]
+
+
+* WebGL Aquarium
+  - WebGL + Websocket
+  - [[http://www.youtube.com/v/64TcBiqmVko?fs=1&amp;hl=en_US][Video]]
+
+* 
+
+#+BEGIN_CENTER
+Websocket⊿
+#+END_CENTER
+
+
+
+* しかもわりと簡単
+
+  - モジュール(Socket.IO)の出来がよい
+
+#+BEGIN_SRC javascript
+socket = new io.Socket('localhost');
+socket.connect();
+socket.on('connect', function(){
+  // connected
+});
+socket.on('message', function(data){
+  // data here
+});
+socket.send('some data');
+#+END_SRC
+
+
+* 
+
+#+BEGIN_CENTER
+なんでJSで@<br>こんなことが？
+#+END_CENTER
+
+
+
+* アーキテクチャの話(ちょっとだけ)
+
+  - イベントドリブン + ノンブロッキング
+  - イベントループがぐるぐるまわってる
+  - ファイルアクセスとかネットワークとか重い処理は非同期で実行
+
+
+* I/O
+
+  - 
+    |---------+-------------------+--------------|
+    |---------+-------------------+--------------|
+    | L1      | 3 cycle           | Non-Blocking |
+    | L2      | 14 cycle          |              |
+    | RAM     | 250 cycle         |              |
+    |---------+-------------------+--------------|
+    | DISK    | 41,000,000 cycle  | Blocking     |
+    | NETWORK | 240,000,000 cycle |              |
+    |---------+-------------------+--------------|
+
+
+http://nodejs.org/cinco_de_node.pdf
+
+
+
+* 
+
+#+BEGIN_CENTER
+要するに
+#+END_CENTER
+
+
+* ブロッキング
+
+  - こうじゃなくて・・
+
+#+BEGIN_SRC javascript
+result = query('select..');
+// ↑これが終わるまで待つ
+// 結果を使う
+next(result);
+#+END_SRC javascript
+
+
+* ノンブロッキング
+
+  - こう
+
+#+BEGIN_SRC javascript
+query('select..', function(result) {
+  // 結果をつかう
+  next(result);
+});
+// query の結果を待たずに次に進む
+next(result);
+
+#+END_SRC javascript
+
+
+* 
+
+#+BEGIN_CENTER
+普通のJavascript
+#+END_CENTER
+
+
+* Javascriptが選ばれた理由
+
+  - イベントドリブン
+  - 非常に速いエンジン(V8)があった
+  - みんな知ってる言語なので親しみやすい
+
+
+* 
+
+#+BEGIN_CENTER
+他にもこんなことができる
+#+END_CENTER
+
+
+* Transloadit
+
+  - リアルタイムエンコーディング
+    - FFmpeg binding
+    - [[http://transloadit.com/blog/2010/12/realtime-encoding-over-150x-faster][Link]]
+
+
+* Htracr
+
+  - パケットスニファリング
+    - pcap binding
+    - [[http://www.mnot.net/blog/nyt.jpg]]
+    - [[http://www.mnot.net/blog/2010/11/27/htracr][Link]]
+  
+    
+* C/C++バインディング
+
+  - どちらも外部のCのプログラムを使用
+  - 負荷がかかる処理は裏でC/C++のプログラムに任せてしまう
+  - 実行結果をもらうようにできる
+
+
+* 
+
+#+BEGIN_CENTER
+Node ⊿ その２
+#+END_CENTER
+
+
+* 
+
+#+BEGIN_CENTER
+シンプル(色々と)
+#+END_CENTER
+
+* API設計がシンプル
+
+  - とにかくコールバックを渡す
+  - 引数の内容もだいたい同じ
+
+
+* HTTPサーバ
+
+#+BEGIN_SRC javascript
+
+var http = require('http');
+http.createServer(function(req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World\n');
+}).listen(8124, "127.0.0.1");
+
+#+END_SRC
+
+
+* Websocket 
+
+#+BEGIN_SRC javascript
+socket = new io.Socket('localhost');
+socket.connect();
+socket.on('connect', function(){
+  // connected
+});
+socket.on('message', function(data){
+  // data here
+});
+socket.send('some data');
+#+END_SRC
+
+
+on = jQuery でいうところの bind
+
+
+* DBアクセス
+
+#+BEGIN_SRC javascript
+var cradle = require('cradle');
+var db = new(
+  cradle.Connection
+)().database('starwars');
+
+db.get('vador', function(err, doc) {
+  doc.name; // 'Darth Vador'
+  assert.equal(doc.force, 'dark');
+});
+#+END_SRC
+
+cradle + CouchDB
+
+
+* 
+
+#+BEGIN_CENTER
+徹底した@<br>コールバック@<br>っぷり
+#+END_CENTER
+
+deferredとかpromiseとかも使えます
+
+
+* さっきの話で・・
+
+  - イベントドリブン
+  - V8がめちゃくちゃ速い
+  - *みんな知ってる言語なので親しみやすい*
+
+
+* 全部Javascriptでいいじゃない
+
+  - フロントエンドは当然Javascript
+  - いまやバックエンドもJavascript
+    - 当然、やりとりするデータはJSON
+  - だったらDBもJSONで
+    - MongoDB, CouchDB, Redis, etc...
+
+* つまり、開発環境がシンプル
+
+  - 開発言語がJavascriptのみ
+
+
+* コーディングも楽
+
+  - 文法の違いによるストレス
+    - == の仕様は？、とか
+    - {} [] () いるんだっけ？、とか
+    - ; は？、とか
+    - とか、とか、とか、とか、とか
+  - から解放される
+  - 頭の中がシンプル
+
+
+* さらにシンプルに - dnode
+
+  - RMI(Remote Method Invocation)
+
+    - サーバ
+
+#+BEGIN_SRC javascript
+var dnode = require('dnode');
+
+dnode({
+  decify : function (n,f) { f(n * 10) }
+}).listen(6060);
+#+END_SRC
+
+* さらにシンプルに - dnode
+
+    - クライアント
+
+#+BEGIN_SRC javascript
+var dnode = require('dnode');
+
+dnode.connect(6060, function (remote) {
+  remote.decify(5, function (n) {
+    console.log(n); // prints 50, woo!
+  });
+});
+#+END_SRC
+
+    - 裏ではWebsocketでやりとり
+
+* PROS or CONS ?
+
+  - 全部JSで書けるということの効果は、思った以上にじわじわ効いてくる
+  - 他の言語に戻りたくなくなる・・
+  - むしろ、なんでこんなことが今までできなかったんだよ、とすら思えてくる・・
+
+
+
+
+* 
+
+#+BEGIN_CENTER
+触ってみたくなってきましたか？
+#+END_CENTER
+
+
+
+* 
+
+#+BEGIN_CENTER
+Node.jsの歩き方
+#+END_CENTER
+
+
+* 
+
+#+BEGIN_CENTER
+コミュニティ
+#+END_CENTER
+
+* コミュニティの規模
+
+  - 
+    | Google groups | members              |
+    |---------------+----------------------|
+    | nodejs        | > 3000               |
+    | nodejs-dev    | > 300                |
+    | nodejs-jp     | > 250 щ(ﾟдﾟщ)ｶﾓｰﾝ |
+
+  - だいたい一日に50-60通くらいメールが飛んでくる
+
+
+
+* コミュニティの人たち
+
+  - 作者(@ryah) = シャイで、いい人
+    - [[http://www.infoq.com/interviews/node-ryan-dahl][インタビュー]]
+  - とても活発
+    - 全体が若い感じ
+    - 楽しんでモジュールを作ってる感満載
+    - 同時多発的に開発が始まるので、かぶることもよくある:D
+
+
+* 情報を探す場所
+
+  - IRC: freenode #node.js
+    - ここでの新機能の提案がされたり、相談にのったりする
+  - メーリングリスト
+    - 正式に議論をする場所
+  - Github の Issue
+    - モジュールがうまく動かないときにここを見ると解決することが多い
+
+* 情報を探す場所
+
+  - Twitter
+    - [[http://twitter.com/masahiroh/nodejs][list]]
+      - どんな人がいるか
+    - #nodejs\_jp
+      - 日本語つぶやき用
+
+
+#+BEGIN_CENTER
+開発環境
+#+END_CENTER
+
+
+* 開発環境
+
+  - インストールは簡単
+  - Nodeとnpmの2つだけ
+
+* 開発環境
+
+  - ソースをダウンロードして解凍
+    [[http://nodejs.org/dist/node-v0.3.2.tar.gz][Link]]
+
+  - ビルド
+
+#+BEGIN_SRC bash
+cd node-v0.3.2
+./configure
+make
+make install
+#+END_SRC
+
+
+* 開発環境
+
+  - npm
+    - Node Package Manager
+
+#+BEGIN_SRC bash
+curl http://npmjs.org/install.sh | sh
+#+END_SRC
+
+    
+* 開発環境
+
+  - バージョン番号
+    - 0.3.x <- 2桁めが奇数 = 開発版
+      - 新機能がばんばん追加される
+      - メーリングリストを見ていれば、何が進行中かわかる
+      - いまは https 実装中
+    - 0.2.x <- 2桁めが偶数 = 安定版
+
+
+*
+
+#+BEGIN_CENTER
+モジュール
+#+END_CENTER
+
+* モジュール - 選び方
+
+  - GithubのWikiから探す
+    - [[https://github.com/ry/node/wiki/modules][Link]]
+  - 個人的な基準
+    - 最終更新が2ヶ月以内
+    - watchが3桁いってる
+
+* モジュール - 楽しみ方
+
+  - バラエティに富んでいる
+    - websocket, http proxy, network sniffer, web framework, etc
+  - コードを読んでみる
+    - サイズの小さい単機能のものがほとんど
+  - つくって公開する = npm へのパブリッシュも簡単
+
+
+* モジュール - Web Framework
+
+  - Web Framework
+    - Express
+    - Socket.IO
+
+
+* モジュール - DB
+
+  - DB
+    - MySQL: node-mysql
+    - MongoDB: mongoose
+    - CouchDB: cradle
+    - Redis: node_redis
+
+
+* モジュール - Test
+
+  - Test
+    - Expresso + should
+    - Vows
+
+
+* モジュール - Debug
+
+  - Debug
+    - Node Inspector
+      - Chrome の Web Inspector を使ってサーバサイドのデバッグができる
+
+
+
+* 
+
+#+BEGIN_CENTER
+ドキュメント
+#+END_CENTER
+
+
+* 日本語のドキュメント
+
+  - 公式ドキュメント
+    - 全部翻訳済みです (ほとんど by @koichik)
+  - チュートリアル
+    - nodejs.jp にリンクがあります by @meso, @yssk22
+
+
+* 
+
+#+BEGIN_CENTER
+これで明日から始められますね！
+#+END_CENTER
+
+
+* 
+  
+#+BEGIN_CENTER
+まとめ
+#+END_CENTER
+
+
+* Node.jsの魅力
+
+  - いろいろ簡単
+    - Javascriptで書ける
+    - 簡単にパフォーマンスのいいアプリを書ける
+    - GitHubでコードを共有できる
+
+
+* いま始めるのを進める理由
+
+  - とにかく楽しい
+    - Websocket
+    - モジュールに刺激を受ける
+  - いままさに成長中
+    - 刻々と状況が変わる過程を目撃できる
+  - 日本のコミュニティは始まって間もないので、アーリーアダプターぶれる:)
+
+
+* 大事なこと
+
+  - なんか今までと違うwktk感
+  - 新しいことにチャレンジしたくなる魅力
+
+
+* ご要望
+  
+  - nodejs.jp にどうぞ！
+  
+* 
+
+#+BEGIN_CENTER
+?
+#+END_CENTER
+
+* 謝辞
+  
+  * このスライドは [[https://gist.github.com/509761][org-html5presentation.el]] で作成しました。
